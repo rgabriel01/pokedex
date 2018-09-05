@@ -1,8 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import store from "./store/index";
+import { addPokemonToList, addArticle } from "./actions/index";
+
+// window.store.dispatch(addArticle({name: "charmander", id: 1}))
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+)
 registerServiceWorker();

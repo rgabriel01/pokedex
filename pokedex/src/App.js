@@ -1,18 +1,38 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import store from "./store/index";
+import Info from "./components/Info";
+import Lineup from "./components/Lineup";
+import List from "./components/list/Index";
+window.App = {};
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = store.getState();
+  }
+
+  componentDidMount() {
+    window.App.store = store;
+    window.App.store.subscribe(this.updateState);
+  }
+
+  updateState = () => {
+    console.log("updating state!")
+    this.setState(window.App.store.getState());
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div className="container">
+        <div className="row">
+          <div className="col-sm-8">
+            <Lineup />
+            <Info />
+          </div>
+          <div className="col-sm-4">
+            <List />
+          </div>
+        </div>
       </div>
     );
   }

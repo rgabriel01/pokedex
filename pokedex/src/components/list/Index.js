@@ -3,23 +3,44 @@ import { POKE_API_URL } from "../../constants/urls";
 import InformationCard from "./InformationCard";
 import pick from "lodash/pick";
 import isEmpty from "lodash/isEmpty";
+import { addPokemonToLineup } from "../../actions/index"
 
 class List extends Component {
+  defaultState = {
+    id: 0,
+    name: "",
+    abilities: [],
+    base_experience: 0,
+    height: 0,
+    weight: 0,
+    sprites: "",
+    stats: [],
+    types: [],
+  }
+
   constructor(props) {
     super(props);
-    this.state = {}
+    this.state = Object.assign({}, this.defaultState)
   }
 
   searchPokemon = () => {
-    const query = document.getElementById("js-search-text").value;
+    const input = document.getElementById("js-search-text");
+    const query = input.value;
     fetch(`${POKE_API_URL}${query}`)
       .then(response => response.json())
       .then(jsonResponse => {
         this.setState(this.formatJson(jsonResponse))
+        input.value = ""
       });
   }
 
-  fields = ["id", "name","height", "weight", "base_experience", "abilities", "stats", "types"]
+  addToLineup = () => {
+    const hashClone = Object.assign({}, this.state)
+    window.App.store.dispatch(addPokemonToLineup(hashClone))
+    this.setState(Object.assign({}, this.defaultState))
+  }
+
+  fields = ["id", "name","height", "weight", "base_experience", "sprites", "abilities", "stats", "types"]
 
   formatJson = (json) => {
     let stateHash = pick(json, this.fields)
@@ -39,13 +60,15 @@ class List extends Component {
       return type.name
     })
 
-    return Object.assign(stateHash, {abilities: abilities, stats: stats, types: types} )
+    let {front_default = ""} = stateHash.sprites
+
+    return Object.assign(stateHash, {sprites: front_default, abilities: abilities, stats: stats, types: types} )
   }
 
   renderInformationCard = () => {
     const { name } = this.state
-    if (isEmpty(name)) { return }
-    return <InformationCard { ...this.state }/>
+    if (isEmpty(name)) { return [] }
+    return <InformationCard addToLineupHandler={this.addToLineup} { ...this.state }/>
   }
 
   render() {

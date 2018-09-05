@@ -34,7 +34,12 @@ const InformationCard = (props) => {
   return (
     <div className="row">
       <div className="col-sm-12">
-        <pre>yo!</pre>
+        <div className="row">
+          <button onClick={props.addToLineupHandler} type="button" className="btn btn-success">Add To Lineup</button>
+        </div>
+        <div className="row">
+          <img src={props.sprites} alt={props.name}/>
+        </div>
         {renderTextFields()}
         {renderArrayFields()}
       </div>

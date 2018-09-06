@@ -16,6 +16,7 @@ class List extends Component {
     sprites: "",
     stats: [],
     types: [],
+    isLoading: false,
   }
 
   constructor(props) {
@@ -26,10 +27,11 @@ class List extends Component {
   searchPokemon = () => {
     const input = document.getElementById("js-search-text");
     const query = input.value;
+    this.setState({isLoading: true})
     fetch(`${POKE_API_URL}${query}`)
       .then(response => response.json())
       .then(jsonResponse => {
-        this.setState(this.formatJson(jsonResponse))
+        this.setState({...this.formatJson(jsonResponse), isLoading: false})
         input.value = ""
       });
   }
@@ -89,7 +91,7 @@ class List extends Component {
                   className="btn btn-outline-secondary"
                   onClick={this.searchPokemon}
                 >
-                    Search!
+                  { this.state.isLoading ? "Fetching..." : "Search!"}
                 </button>
               </div>
             </div>

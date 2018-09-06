@@ -1,27 +1,28 @@
-import React, { Component } from 'react';
-import store from "./store/index";
-import Info from "./components/info/Index";
-import Lineup from "./components/lineup/Index";
-import List from "./components/list/Index";
-import isEmpty from "lodash/isEmpty";
-import { setPokemon, removePokemonToLineup } from "./actions/index"
+import React, { Component } from 'react'
 import pick from "lodash/pick"
-window.App = {};
+import isEmpty from "lodash/isEmpty"
+import wallpaper from "./images/wallpaper.jpg"
+import store from "./store/index"
+import Info from "./components/info/Index"
+import Lineup from "./components/lineup/Index"
+import List from "./components/list/Index"
+import { setPokemon, removePokemonToLineup } from "./actions/index"
+window.App = {}
 
 class App extends Component {
   constructor(props) {
-    super(props);
-    this.state = store.getState();
+    super(props)
+    this.state = store.getState()
   }
 
   componentDidMount() {
-    window.App.store = store;
-    window.App.store.subscribe(this.updateState);
+    window.App.store = store
+    window.App.store.subscribe(this.updateState)
   }
 
   updateState = () => {
     console.log("updating state!")
-    this.setState(window.App.store.getState());
+    this.setState(window.App.store.getState())
   }
 
   loadPokedataHandler = (event) => {
@@ -46,16 +47,24 @@ class App extends Component {
     return <Info key={key} {...pokeData}/>
   }
 
-  render() {
-    return (
-      <div className="container">
-        <div className="row">
-          <div className="col-sm-8">
+  renderLineup = () => {
+    const { pokeLineup } = this.state.pokeLineup
+    console.log(pokeLineup)
+    return (isEmpty(pokeLineup)) ?
+            <img src={wallpaper} alt="pokedex"/> :
             <Lineup
               removePokemonFromLineupHandler={this.removePokemonFromLineupHandler}
               loadPokedataHandler={this.loadPokedataHandler}
               {...this.state}
             />
+  }
+
+  render() {
+    return (
+      <div className="container">
+        <div className="row mt-5">
+          <div className="col-sm-8">
+            {this.renderLineup()}
             {this.renderInfo()}
           </div>
           <div className="col-sm-4">

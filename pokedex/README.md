@@ -18,7 +18,10 @@ pokemons
 1. ReactJS
 2. Create React APP
 3. Yarn
-4. Bootstrap
+4. Bootstrap 4
+5. Lodash
 
-### setup
-
+### Setup
+1. simply run `yarn install`
+2. then `yarn start`
+3. your app will run, defaulty, to `localhost:3000`

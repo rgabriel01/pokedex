@@ -5,7 +5,7 @@ import pokeLineup from "./pokeLineup";
 
 const rootReducer = combineReducers({
   articles: article,
-  pokeLineup: pokeLineup
+  pokeLineup: pokeLineup,
 });
 
 export default rootReducer;

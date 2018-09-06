@@ -40,10 +40,15 @@ class List extends Component {
     this.setState(Object.assign({}, this.defaultState))
   }
 
-  fields = ["id", "name","height", "weight", "base_experience", "sprites", "abilities", "stats", "types"]
+  fields = ["id", "name","height", "weight", "base_experience", "sprites", "moves", "abilities", "stats", "types"]
 
   formatJson = (json) => {
     let stateHash = pick(json, this.fields)
+
+    let moves = stateHash.moves.map((mve) => {
+      const { move = {} } = mve
+      return move.name
+    })
 
     let abilities = stateHash.abilities.map((abl) => {
       const { ability = {} } = abl
@@ -62,7 +67,7 @@ class List extends Component {
 
     let {front_default = ""} = stateHash.sprites
 
-    return Object.assign(stateHash, {sprites: front_default, abilities: abilities, stats: stats, types: types} )
+    return Object.assign(stateHash, {sprites: front_default, moves: moves, abilities: abilities, stats: stats, types: types} )
   }
 
   renderInformationCard = () => {

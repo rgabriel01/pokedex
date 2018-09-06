@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import store from "./store/index";
-import Info from "./components/Info";
+import Info from "./components/info/Index";
 import Lineup from "./components/lineup/Index";
 import List from "./components/list/Index";
 import isEmpty from "lodash/isEmpty";
-import { setPokemon } from "./actions/index"
+import { setPokemon, removePokemonToLineup } from "./actions/index"
+import pick from "lodash/pick"
 window.App = {};
 
 class App extends Component {
@@ -31,10 +32,18 @@ class App extends Component {
     window.App.store.dispatch(setPokemon(selectedPokemon))
   }
 
+  removePokemonFromLineupHandler = (event) => {
+    const target = event.currentTarget
+    const pokeId = target.dataset.id
+    window.App.store.dispatch(removePokemonToLineup({id: pokeId}))
+  }
+
   renderInfo = () => {
-    const {selectedPokemon} = this.state
-    if (isEmpty(this.state.selectedPokemon)) { return }
-    <Info pokeData={selectedPokemon}/>
+    const { selectedPokemon = {} } = this.state.pokeLineup
+    if (isEmpty(selectedPokemon)) { return }
+    const pokeData = pick(selectedPokemon, ["id", "selectedMoves", "nickname", "moves"])
+    const  key = Math.random().toString(36).slice(2)
+    return <Info key={key} {...pokeData}/>
   }
 
   render() {
@@ -42,7 +51,11 @@ class App extends Component {
       <div className="container">
         <div className="row">
           <div className="col-sm-8">
-            <Lineup loadPokedataHandler={this.loadPokedataHandler} {...this.state}/>
+            <Lineup
+              removePokemonFromLineupHandler={this.removePokemonFromLineupHandler}
+              loadPokedataHandler={this.loadPokedataHandler}
+              {...this.state}
+            />
             {this.renderInfo()}
           </div>
           <div className="col-sm-4">
